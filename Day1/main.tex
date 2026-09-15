@@ -1,0 +1,770 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% Cấu hình ngôn ngữ Tiếng Việt và Font
+\usepackage[utf8]{inputenc}
+\usepackage[T5,T1]{fontenc}
+\usepackage[vietnamese]{babel}
+
+% Gói đồ họa, bảng biểu và cấu trúc
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, backgrounds, fit, shadows}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{pifont}
+\usepackage{listings}
+\usepackage{amsmath, amssymb}
+
+% Chủ đề Beamer và Tùy biến Màu sắc Hiện đại
+\usetheme{Madrid}
+\useinnertheme{rectangles}
+
+\definecolor{hfprimary}{RGB}{15, 37, 55}       % Deep Navy
+\definecolor{hforange}{RGB}{245, 158, 11}      % Hugging Face Gold/Amber
+\definecolor{hfblue}{RGB}{14, 165, 233}       % Cyan / Tech Blue
+\definecolor{hfdark}{RGB}{30, 41, 59}         % Slate Dark
+\definecolor{hfgray}{RGB}{243, 246, 250}      % Soft Gray Background
+\definecolor{hfborder}{RGB}{203, 213, 225}    % Border Gray
+\definecolor{hfgreen}{RGB}{16, 185, 129}      % Success Emerald
+\definecolor{hfred}{RGB}{239, 68, 68}         % Alert Red
+
+% Áp dụng bảng màu vào Beamer
+\setbeamercolor{structure}{fg=hfprimary}
+\setbeamercolor{palette primary}{bg=hfprimary, fg=white}
+\setbeamercolor{palette secondary}{bg=hforange, fg=hfprimary}
+\setbeamercolor{palette tertiary}{bg=hfdark, fg=white}
+\setbeamercolor{frametitle}{bg=hfprimary, fg=white}
+\setbeamercolor{title}{bg=hfprimary, fg=white}
+\setbeamercolor{subtitle}{fg=hforange}
+\setbeamercolor{author}{fg=white}
+\setbeamercolor{institute}{fg=white!85}
+\setbeamercolor{date}{fg=white!75}
+
+% Tùy biến Khối (Blocks)
+\setbeamercolor{block title}{bg=hfprimary, fg=white}
+\setbeamercolor{block body}{bg=hfgray, fg=hfdark}
+\setbeamercolor{block title example}{bg=hfgreen, fg=white}
+\setbeamercolor{block body example}{bg=hfgray, fg=hfdark}
+\setbeamercolor{block title alerted}{bg=hfred, fg=white}
+\setbeamercolor{block body alerted}{bg=hfgray, fg=hfdark}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{items}[circle]
+
+% Định dạng Header/Footer
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{palette primary}%
+    10 Days Training AI
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{palette secondary}%
+    Module: Hugging Face Ecosystem
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{palette tertiary}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Cấu hình hiển thị code Python
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{hfblue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{hforange},
+  backgroundcolor=\color{hfgray},
+  frame=single,
+  rulecolor=\color{hfborder},
+  breaklines=true,
+  showstringspaces=false,
+  xleftmargin=1.5em,
+  framexleftmargin=1em
+}
+
+% Thông tin trang tiêu đề
+\title[\textbf{Hugging Face Ecosystem}]{\huge \textbf{Nghiên Cứu Hệ Sinh Thái Hugging Face}}
+\author[AI Team]{\textbf{Bộ phận Nghiên cứu \& Phát triển AI}}
+\institute[Company]{\textbf{Chương trình Đào tạo Chuyên sâu 10 Ngày về Trí tuệ Nhân tạo}}
+\date[\today]{Ngày 1: Nền tảng \& Hạ tầng Hugging Face}
+
+\begin{document}
+
+%---------------------------------------------------------
+% SLIDE 1: Title Page
+%---------------------------------------------------------
+\begin{frame}[plain]
+  \titlepage
+  \begin{center}
+    \begin{tikzpicture}
+      \node[draw=hforange, fill=hforange!10, rounded corners=6pt, inner sep=5pt] {
+        \footnotesize \textbf{\textcolor{hfprimary}{ Mục tiêu:}} Làm chủ Hub, Transformers, Fine-tuning, Deployment \& Enterprise Compliance
+      };
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 3: Bản đồ Hệ sinh thái Hugging Face (TikZ Sơ đồ trực quan)
+%---------------------------------------------------------
+\begin{frame}{Bản đồ Hệ sinh thái Toàn diện (The Hugging Face Ecosystem)}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.92, transform shape,
+  % Node trung tam (Hub)
+  hubnode/.style={
+    rectangle,
+    draw=hforange,
+    fill=hforange!15,
+    line width=1.6pt,
+    rounded corners=8pt,
+    inner sep=6pt,
+    align=center,
+    text width=4.3cm,
+    drop shadow
+  },
+  % Node ve tinh (Left & Right)
+  satnode/.style={
+    rectangle,
+    line width=1.1pt,
+    rounded corners=6pt,
+    inner sep=5pt,
+    align=center,
+    text width=3.4cm,
+    drop shadow
+  },
+  % Node tren va duoi (Top & Bottom)
+  tbnode/.style={
+    rectangle,
+    line width=1.1pt,
+    rounded corners=6pt,
+    inner sep=4pt,
+    align=center,
+    text width=5.4cm,
+    drop shadow
+  },
+  % Mui ten 2 chieu ket noi Hub
+  hubarr/.style={
+    {Stealth[length=4.5pt, width=3.5pt]}-{Stealth[length=4.5pt, width=3.5pt]},
+    line width=1.1pt,
+    draw=hforange!90!black
+  },
+  % Mui ten luong phu
+  flowarr/.style={
+    -{Stealth[length=4.5pt, width=3.5pt]},
+    line width=1.0pt,
+    dashed
+  }
+]
+
+  % 1. Central Hub Node (Trọng tâm hệ thống)
+  \node[hubnode] (hub) at (0, 0) {
+    \textbf{\textcolor{hfprimary}{\large Hugging Face Hub}}\\[3pt]
+    \scriptsize \textbf{Nền tảng Lưu trữ Git LFS Trung tâm}\\[2pt]
+    \footnotesize \textcolor{hfblue}{\textbf{Models}} $\;\boldsymbol{\cdot}\;$ \textcolor{hfgreen!90!black}{\textbf{Datasets}} $\;\boldsymbol{\cdot}\;$ \textcolor{hforange!90!black}{\textbf{Spaces}}
+  };
+
+  % 2. Top Node: Governance & Security
+  \node[tbnode, fill=gray!12, draw=hfdark] (gov) at (0, 2.05) {
+    \textbf{\textcolor{hfprimary}{Governance \& Security}}\\[2pt]
+    \scriptsize Access Tokens (Read/Write/RBAC) $\;\boldsymbol{\cdot}\;$ Model Cards $\;\boldsymbol{\cdot}\;$ SafeTensors
+  };
+
+  % 3. Bottom Node: Inference Solutions
+  \node[tbnode, fill=hfred!10, draw=hfred!80!black] (infer) at (0, -2.05) {
+    \textbf{\textcolor{hfred!90!black}{Inference Solutions}}\\[2pt]
+    \scriptsize Serverless API $\;\boldsymbol{\cdot}\;$ Dedicated Endpoints $\;\boldsymbol{\cdot}\;$ vLLM / TGI
+  };
+
+  % 4. Left Nodes (Data & Training Pipeline)
+  \node[satnode, fill=hfgreen!10, draw=hfgreen!80!black] (datasets) at (-4.8, 1.25) {
+    \textbf{\textcolor{hfgreen!90!black}{Datasets Hub}}\\[2pt]
+    \scriptsize > 200,000 Datasets\\Apache Arrow $\;\boldsymbol{\cdot}\;$ Streaming
+  };
+
+  \node[satnode, fill=purple!10, draw=purple!80!black] (libs) at (-4.8, -1.25) {
+    \textbf{\textcolor{purple!90!black}{Open-Source Libraries}}\\[2pt]
+    \scriptsize \texttt{transformers}, \texttt{peft}, \texttt{trl}\\
+    \texttt{accelerate}, \texttt{diffusers}
+  };
+
+  % 5. Right Nodes (Models & Application Deployment)
+  \node[satnode, fill=hfblue!10, draw=hfblue!80!black] (models) at (4.8, 1.25) {
+    \textbf{\textcolor{hfblue!90!black}{Models Hub}}\\[2pt]
+    \scriptsize > 1,000,000 Models\\LLM, Vision, Audio, Multimodal
+  };
+
+  \node[satnode, fill=hforange!10, draw=hforange!80!black] (spaces) at (4.8, -1.25) {
+    \textbf{\textcolor{hforange!90!black}{Spaces (Web Apps)}}\\[2pt]
+    \scriptsize Demo nhanh với Gradio\\Streamlit $\;\boldsymbol{\cdot}\;$ Docker SDK
+  };
+
+  % 6. Hub Connections (Các mũi tên 2 chiều đối xứng, KHÔNG cắt nhau)
+  \draw[hubarr] (hub) -- (gov);
+  \draw[hubarr] (hub) -- (infer);
+  \draw[hubarr] (hub) -- (datasets);
+  \draw[hubarr] (hub) -- (libs);
+  \draw[hubarr] (hub) -- (models);
+  \draw[hubarr] (hub) -- (spaces);
+
+  % 7. Workflow ngoài viền (Vertical flow, hoàn toàn không chạm tâm)
+  \draw[flowarr, draw=hfgreen!80!black] (datasets) -- node[left, font=\scriptsize\bfseries, text=hfgreen!90!black] {Nạp dữ liệu} (libs);
+  \draw[flowarr, draw=hfblue!80!black] (models) -- node[right, font=\scriptsize\bfseries, text=hfblue!90!black] {Tạo Web UI} (spaces);
+
+\end{tikzpicture}
+\end{center}
+\vspace{-0.4em}
+\scriptsize \textbf{Điểm mấu chốt:} Hugging Face không chỉ là kho lưu trữ (Hub), mà là một hệ điều hành trọn gói cho toàn bộ vòng đời AI từ \textbf{Dữ liệu} $\rightarrow$ \textbf{Huấn luyện} $\rightarrow$ \textbf{Triển khai \& Phục vụ}.
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 4: Trụ cột cốt lõi: Hub, Tokens & Model Card
+%---------------------------------------------------------
+\begin{frame}{Các Trụ Cột Quản Trị: Hub, Tokens \& Model Cards}
+\begin{columns}[T]
+  \begin{column}{0.32\textwidth}
+    \begin{block}{\textbf{1. Hugging Face Hub}}
+      \begin{itemize}
+        \item \textbf{Cơ chế Git LFS}: Quản lý phiên bản cho cả code và file trọng số lớn (\texttt{.safetensors}).
+        \item \textbf{Commit \& Branch}: Tải model theo commit hash cụ thể để tránh rủi ro vỡ hệ thống khi tác giả cập nhật.
+        \item \textbf{Organization}: Quản lý repo dùng chung cho doanh nghiệp.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.32\textwidth}
+    \begin{block}{\textbf{2. Access Tokens}}
+      \begin{itemize}
+        \item \textbf{Read Token}: Tải các gated models (vd: Llama 3, Gemma) sau khi đăng ký truy cập.
+        \item \textbf{Write Token}: Tự động đẩy trọng số/adapter sau khi training lên Hub.
+        \item \textbf{Fine-grained Token}: Phân quyền chi tiết (RBAC) theo từng repository cụ thể trong môi trường CI/CD.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.32\textwidth}
+    \begin{block}{\textbf{3. Model Card Chuẩn}}
+      \begin{itemize}
+        \item \textbf{YAML Metadata}: Khai báo rõ kiến trúc, task, ngôn ngữ, dataset huấn luyện.
+        \item \textbf{Intended Use \& Bias}: Hướng dẫn phạm vi sử dụng đúng và cảnh báo rủi ro thiên vị.
+        \item \textbf{Benchmark}: Công bố kết quả đo lường (MMLU, GSM8K, MT-Bench).
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 5: Quy trình Tìm kiếm, Đánh giá & Tải Model
+%---------------------------------------------------------
+\begin{frame}{Search, Evaluation \& Load Model}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.9, transform shape,
+  stepnode/.style={rectangle, draw=hfprimary, fill=white, rounded corners=6pt, inner sep=6pt, font=\small, align=center, line width=1.1pt, drop shadow, text width=3.1cm},
+  arrowstep/.style={-{Stealth[scale=1.1]}, line width=1.5pt, draw=hforange}
+]
+  \node[stepnode, fill=hfblue!10] (s1) at (0,0) {
+    \textbf{Bước 1: Lọc Model}\\[3pt]
+    \scriptsize $\bullet$ Lọc theo \textit{Task} (Text, Vision)\\
+    $\bullet$ Lọc \textit{License} (MIT, Apache)\\
+    $\bullet$ Sort theo Likes \& Downloads
+  };
+
+  \node[stepnode, fill=hforange!10] (s2) at (3.8,0) {
+    \textbf{Bước 2: Soát Model Card}\\[3pt]
+    \scriptsize $\bullet$ Đọc phần cứng tối thiểu
+    $\bullet$ Định dạng \texttt{.safetensors}
+    $\bullet$ Kiểm tra Chat Template
+    $\bullet$ Điểm Benchmark uy tín
+  };
+
+  \node[stepnode, fill=purple!10] (s3) at (7.6,0) {
+    \textbf{Bước 3: Dự toán VRAM}\\[3pt]
+    \scriptsize $\bullet$ FP16: $\approx 2B$\\
+    $\bullet$ 4-bit/8-bit Quantization\\
+    $\bullet$ Ví dụ: Llama-3-8B FP16 cần 16GB VRAM, 4-bit cần 6GB
+  };
+
+  \node[stepnode, fill=hfgreen!10] (s4) at (11.4,0) {
+    \textbf{Bước 4: Tải \& Cache}\\[3pt]
+    \scriptsize $\bullet$ Tải qua \texttt{from\_pretrained}\\
+    $\bullet$ Lưu đệm tại \texttt{\~{}/.cache/huggingface}\\
+    $\bullet$ Chốt \texttt{revision="commit\_id"}
+  };
+
+  \draw[arrowstep] (s1) -- (s2);
+  \draw[arrowstep] (s2) -- (s3);
+  \draw[arrowstep] (s3) -- (s4);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.8em}
+\begin{columns}[T]
+  \begin{column}{0.48\textwidth}
+    \begin{exampleblock}{\textbf{Mẹo tiết kiệm băng thông \& bộ nhớ}}
+      Sử dụng chế độ \textbf{Streaming Datasets} (\texttt{streaming=True}) để xử lý tập dữ liệu lớn hàng trăm GB mà không cần tải toàn bộ về đĩa cứng.
+    \end{exampleblock}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{Cơ chế Snapshot Download}}
+      Có thể tải trước toàn bộ repo trọng số bằng \texttt{huggingface\_hub.snapshot\_download} để triển khai offline trong môi trường nội bộ công ty (Air-gapped network).
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 6: Các Use Cases Tiêu Biểu Trong Doanh Nghiệp
+%---------------------------------------------------------
+\begin{frame}{Use Cases Tiêu Biểu Của Hugging Face Trong Doanh Nghiệp}
+\begin{columns}[T]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{1. Enterprise RAG}}
+      \begin{itemize}
+        \item \textbf{Mô hình}: \texttt{BAAI/bge-m3} + \texttt{Llama-3.1-8B}.
+        \item \textbf{Giá trị}: Tra cứu quy chế, hợp đồng, tài liệu kỹ thuật nhanh chóng.
+        \item \textbf{Triển khai}: On-premise đảm bảo không lọt dữ liệu nội bộ.
+      \end{itemize}
+    \end{block}
+
+    \vspace{0.4em}
+    \begin{block}{\textbf{2. Meeting AI}}
+      \begin{itemize}
+        \item \textbf{Mô hình}: \texttt{openai/whisper-large-v3} + LLM summary.
+        \item \textbf{Giá trị}: Tự động chuyển audio cuộc họp thành văn bản, trích xuất Action Items và tóm tắt theo cấu trúc chuẩn.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{3. OCR}}
+      \begin{itemize}
+        \item \textbf{Mô hình}: Vision-Language Models (\texttt{Qwen2-VL}, \texttt{Donut}).
+        \item \textbf{Giá trị}: Tự động trích xuất thông tin hóa đơn, báo giá, hồ sơ nhân sự dạng ảnh/PDF vào hệ thống ERP/CRM.
+      \end{itemize}
+    \end{block}
+
+    \vspace{0.4em}
+    \begin{block}{\textbf{4. Assistant Chatbot}}
+      \begin{itemize}
+        \item \textbf{Kỹ thuật}: Fine-tune LoRA trên tập dữ liệu hội thoại CSKH.
+        \item \textbf{Giá trị}: Phản hồi chuẩn văn phong thương hiệu 24/7, hạ chi phí API 80\% so với dùng API thương mại đóng.
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 7: Chạy Model Đa tác vụ (Code Demo Nhỏ)
+%---------------------------------------------------------
+\begin{frame}[fragile]{Thực Chiến Đa Tác Vụ: LLM, Embedding, Vision \& ASR}
+\begin{columns}[T]
+  \begin{column}{0.49\textwidth}
+    \textbf{\textcolor{hfprimary}{1. Text Generation (LLM)}}
+\begin{lstlisting}
+from transformers import pipeline
+# Khoi tao pipeline sinh van ban
+generator = pipeline("text-generation", 
+                     model="meta-llama/Llama-3.2-1B-Instruct",
+                     device_map="auto")
+res = generator("AI trong doanh nghiep la:", max_new_tokens=50)
+\end{lstlisting}
+
+    \vspace{0.5em}
+    \textbf{\textcolor{hfprimary}{2. Semantic Embedding (RAG)}}
+\begin{lstlisting}
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('BAAI/bge-m3')
+# Trich xuat vector da ngon ngu 1024 chieu
+embeddings = model.encode(["Hoc AI 10 ngay", "Machine Learning"])
+\end{lstlisting}
+  \end{column}
+
+  \begin{column}{0.49\textwidth}
+    \textbf{\textcolor{hfprimary}{3. Automatic Speech Recognition (ASR)}}
+\begin{lstlisting}
+from transformers import pipeline
+# Chuyen doi giong noi thanh van ban
+asr = pipeline("automatic-speech-recognition", 
+               model="openai/whisper-small")
+text = asr("meeting_record.mp3")["text"]
+\end{lstlisting}
+
+    \vspace{0.5em}
+    \textbf{\textcolor{hfprimary}{4. Vision / Image Classification}}
+\begin{lstlisting}
+from transformers import pipeline
+classifier = pipeline("image-classification", 
+                      model="google/vit-base-patch16-224")
+preds = classifier("product_sample.jpg")
+\end{lstlisting}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 7: Kiến trúc Fine-tuning: Full vs PEFT/LoRA (TikZ Sơ đồ trực quan)
+%---------------------------------------------------------
+\begin{frame}{Kiến Trúc Fine-Tuning: Full Fine-tuning vs LoRA}
+\begin{columns}[T]
+  \begin{column}{0.46\textwidth}
+    \begin{tikzpicture}[scale=0.82, transform shape]
+      % Base model matrix
+      \node[draw=hfprimary, fill=hfprimary!15, minimum width=2.6cm, minimum height=2.8cm, rounded corners=4pt, align=center, font=\small] (W0) at (0, 0.4) {
+        $W_0 \in \mathbb{R}^{d \times k}$\\[5pt]
+        \textbf{\textcolor{hfred}{FROZEN}}\\
+        \tiny Use 99.9\% memory
+      };
+
+      % Plus sign
+      \node[font=\Huge\bfseries, text=hfprimary] at (2.0, 0.4) {$+$};
+
+      % LoRA Matrices
+      \node[draw=hforange, fill=hforange!20, minimum width=0.7cm, minimum height=2.8cm, rounded corners=3pt, align=center, font=\footnotesize] (B) at (3.3, 0.4) {
+        $B$\\ \tiny $d \times r$
+      };
+      \node[draw=hfgreen, fill=hfgreen!20, minimum width=2.0cm, minimum height=0.7cm, rounded corners=3pt, align=center, font=\footnotesize] (A) at (4.9, 0.4) {
+        $A$\\ \tiny $r \times k$
+      };
+
+      % Label bên dưới LoRA - Đặt khoảng cách an toàn, tuyệt đối không đè lên B và A
+      \node[font=\footnotesize, text=hfdark, align=center] at (4.1, -1.65) {
+        \textbf{Adapter LoRA: $\Delta W = B \times A$}\\[2pt]
+        \textbf{\textcolor{hfgreen}{\ding{51} TRAINABLE}} \scriptsize ($r \ll \min(d, k)$, vd: $r=8, 16$)
+      };
+    \end{tikzpicture}
+  \end{column}
+
+  \begin{column}{0.52\textwidth}
+    \begin{block}{\textbf{Công thức cốt lõi: $W = W_0 + \frac{\alpha}{r}(B \times A)$}}
+      \small
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item Giữ nguyên $W_0$ $\rightarrow$ Catastrophic Forgetting.
+        \item Chỉ huấn luyện 2 matrix phân rã rank thấp $A$ và $B$.
+      \end{itemize}
+    \end{block}
+
+    \vspace{0.2em}
+    \begin{exampleblock}{\textbf{Ưu điểm vượt trội cho doanh nghiệp}}
+      \small
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item \textbf{Tiết kiệm > 75\% VRAM}: Fine-tune model 8B trên GPU cá nhân 24GB (RTX 3090/4090).
+        \item \textbf{File trọng số siêu nhẹ}: Adapter chỉ nặng $\approx$ 10MB--50MB (thay vì 16GB--32GB).
+        \item \textbf{Cắm rút đa nhiệm}: Dùng chung 1 Base Model cho nhiều nghiệp vụ (HR, Sales, IT).
+      \end{itemize}
+    \end{exampleblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 8: Quy trình Fine-tune chuẩn với TRL & SFTTrainer
+%---------------------------------------------------------
+\begin{frame}[fragile]{Quy Trình Fine-tune)}
+\begin{columns}[T]
+  \begin{column}{0.46\textwidth}
+    \begin{block}{\textbf{Pipeline training 4 bước}}
+      \small
+      \begin{enumerate}\setlength{\itemsep}{2pt}
+        \item \textbf{Chuẩn bị dữ liệu}: Định dạng hội thoại (ShareGPT/Alpaca) qua \texttt{apply\_chat\_template}.
+        \item \textbf{Cấu hình LoRA}: Chọn target modules (\texttt{q\_proj, v\_proj, k\_proj, o\_proj}).
+        \item \textbf{Huấn luyện SFTTrainer}: Giám sát Loss, Gradient Accumulation, FP16/BF16.
+        \item \textbf{Merge \& Export}: Lưu Adapter riêng hoặc gộp (\texttt{merge\_and\_unload}).
+      \end{enumerate}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.52\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{6.8pt}{8.2pt}\selectfont]
+from peft import LoraConfig
+from trl import SFTTrainer
+from transformers import TrainingArguments
+
+# 1. Cau hinh LoRA tiet kiem VRAM
+peft_config = LoraConfig(
+    r=16, lora_alpha=32, lora_dropout=0.05,
+    target_modules=["q_proj", "v_proj"],
+    bias="none", task_type="CAUSAL_LM"
+)
+
+# 2. Khoi tao & Huan luyen SFTTrainer
+trainer = SFTTrainer(
+    model="meta-llama/Llama-3.2-1B-Instruct",
+    train_dataset=dataset,
+    peft_config=peft_config,
+    args=TrainingArguments(
+        output_dir="./lora_output",
+        per_device_train_batch_size=4,
+        gradient_accumulation_steps=2,
+        learning_rate=2e-4, fp16=True, logging_steps=10
+    )
+)
+trainer.train()
+\end{lstlisting}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 9: So sánh Hosted Inference vs Self-hosted
+%---------------------------------------------------------
+\begin{frame}{Triển Khai Mô Hình: Hosted Inference vs Self-Hosted}
+\begin{table}[]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{2.2cm}p{3.5cm}p{3.8cm}p{3.8cm}@{}}
+\toprule
+\textbf{Tiêu chí} & \textbf{Serverless API (HF)} & \textbf{Dedicated Endpoints (HF)} & \textbf{Self-Hosted (vLLM / TGI)} \\ \midrule
+\textbf{Bản chất} & Dùng chung hạ tầng (Multi-tenant), tính theo token/call & Server ảo riêng trên Cloud (AWS/GCP/Azure) quản lý bởi HF & Tự dựng trên On-Premises Server hoặc Cloud Instance riêng \\
+\textbf{Độ trễ \& SLA} & Có thể gặp Cold Start, không cam kết độ trễ cực thấp & Đảm bảo SLA, phần cứng chuyên dụng (A10G, A100), Autoscaling & Tối ưu độ trễ cực thấp qua PagedAttention, Continuous Batching \\
+\textbf{Bảo mật Dữ liệu} & Gửi dữ liệu qua Internet tới server HF & Dedicated VPC, mã hóa đầu cuối, tiêu chuẩn SOC2 Type II & Dữ liệu 100\% nội bộ doanh nghiệp (Air-gapped khả thi) \\
+\textbf{Chi phí} & Cực rẻ cho thử nghiệm/PoC (có Free tier) & Trả theo giờ chạy máy (\$0.6 - \$4.5/giờ tuỳ loại GPU) & Chi phí cố định phần cứng (CapEx) hoặc thuê máy chủ Cloud \\
+\textbf{Phù hợp với} & Prototype, Demo, Test ý tưởng nhanh & Ứng dụng Production quy mô vừa, không muốn quản trị infra & Hệ thống Core doanh nghiệp, dữ liệu nhạy cảm, High Throughput \\ \bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 10: Cây Quyết định Triển khai (TikZ Decision Tree)
+%---------------------------------------------------------
+\begin{frame}{Cây Quyết Định Kiến Trúc Triển Khai Trong Doanh Nghiệp}
+\begin{center}
+\vspace{-0.6em}
+\begin{tikzpicture}[
+  scale=0.80, transform shape,
+  decision/.style={
+    diamond,
+    draw=hforange,
+    fill=hforange!20,
+    font=\scriptsize\bfseries,
+    align=center,
+    inner sep=2pt,
+    line width=1.1pt,
+    aspect=1.35
+  },
+  blocksol/.style={
+    rectangle,
+    draw=hfprimary,
+    fill=white,
+    rounded corners=5pt,
+    font=\footnotesize,
+    align=center,
+    inner sep=5pt,
+    line width=1.1pt,
+    text width=2.85cm,
+    drop shadow
+  },
+  arr/.style={-{Stealth[scale=0.95]}, line width=1.1pt, draw=hfprimary},
+  badge/.style={font=\tiny\bfseries, text=hfprimary, fill=white, draw=hfborder, rounded corners=2pt, inner sep=2pt}
+]
+  % 1. Decision Nodes (Hình thoi chuẩn tỷ lệ aspect=1.35, gọn gàng)
+  \node[decision] (start) at (-3.5, 1.8) {Giai đoạn\\dự án là gì?};
+  \node[decision] (security) at (0.8, 1.8) {Dữ liệu mật /\\On-premise?};
+  \node[decision] (ops) at (3.4, 0.35) {Có đội ngũ\\MLOps/DevOps?};
+
+  % 2. Solution Nodes (4 cột cân đối, khoảng cách đều nhau)
+  \node[blocksol, fill=hfblue!15] (serverless) at (-5.2, -1.2) {
+    \textbf{HF Serverless API}\\[2pt]
+    \scriptsize Nhanh, chi phí thấp\\Tối ưu cho test PoC
+  };
+  \node[blocksol, fill=hfred!15] (onprem) at (-1.8, -1.2) {
+    \textbf{Self-host: vLLM / TGI}\\[2pt]
+    \scriptsize Server riêng On-prem\\Bảo mật tuyệt đối 100\%
+  };
+  \node[blocksol, fill=hfgreen!15] (dedicated) at (1.6, -1.2) {
+    \textbf{HF Dedicated Endpoints}\\[2pt]
+    \scriptsize 1-click deploy Cloud\\Tự động scale GPU
+  };
+  \node[blocksol, fill=purple!15] (managed) at (5.2, -1.2) {
+    \textbf{Self-host with vLLM}\\[2pt]
+    \scriptsize Quản trị trên Cloud\\Tối đa throughput
+  };
+
+  % 3. Connections (Nhãn đặt trên đoạn thẳng đứng hoặc khoảng trống rộng, có khung viền badge trắng)
+  \draw[arr] (start.west) -| node[badge, pos=0.65] {Khảo sát / Demo} (serverless.north);
+  \draw[arr] (start.east) -- node[badge, midway] {Production / Thực tế} (security.west);
+
+  \draw[arr] (security.south) -- ++(0, -0.3) -| node[badge, pos=0.6] {Có (Bắt buộc)} (onprem.north);
+  \draw[arr] (security.east) -| node[badge, pos=0.35] {Không bắt buộc} (ops.north);
+
+  \draw[arr] (ops.west) -| node[badge, pos=0.6] {Không có DevOps} (dedicated.north);
+  \draw[arr] (ops.east) -| node[badge, pos=0.6] {Có DevOps giỏi} (managed.north);
+\end{tikzpicture}
+\vspace{-0.6em}
+\end{center}
+\scriptsize \textbf{Khuyến nghị:} Giai đoạn đầu đào tạo \& làm PoC chọn \textbf{Serverless/Dedicated}; giai đoạn triển khai sản phẩm lõi nhạy cảm chọn \textbf{Self-hosted vLLM}.
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 11: Pháp lý & Phân loại License Model
+%---------------------------------------------------------
+\begin{frame}{Open Source vs Open Weights}
+\begin{columns}[T]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{Open Source (Apache 2.0, MIT)}}
+      \begin{itemize}
+        \item \textbf{Đại diện tiêu biểu}: Mistral-7B-v0.1, Qwen 2.5, Whisper, BERT, RoBERTa.
+        \item \textbf{Quyền hạn}: Tự do thương mại hóa, sửa đổi, đóng gói bán phần mềm không cần xin phép.
+        \item \textbf{Rủi ro pháp lý}: Gần như bằng 0 nếu tuân thủ giữ nguyên phần ghi nhận bản quyền.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{alertblock}{\textbf{Open Weights / Community License}}
+      \begin{itemize}
+        \item \textbf{Llama 3.x Community License}:
+          \begin{itemize}
+            \scriptsize
+            \item Miễn phí thương mại nếu sản phẩm có dưới \textbf{700 triệu người dùng hoạt động hàng tháng}. Vượt ngưỡng phải xin phép Meta.
+            \item \textbf{Cấm kỵ}: Không được dùng dữ liệu sinh từ Llama để huấn luyện model cạnh tranh trực tiếp.
+          \end{itemize}
+        \item \textbf{Gemma Terms of Use}: Cấm sử dụng vào các mục đích gây hại, giám sát, vi phạm chính sách của Google.
+      \end{itemize}
+    \end{alertblock}
+  \end{column}
+\end{columns}
+
+\vspace{0.6em}
+\begin{center}
+\colorbox{hforange!15}{\parbox{0.96\textwidth}{
+\centering \footnotesize \textbf{\textcolor{hfprimary}{\ding{228} Nguyên tắc vàng}} Luôn kiểm tra thẻ \texttt{license:} trong tệp \texttt{README.md} (Model Card) trên Hub trước khi tích hợp vào sản phẩm thương mại.
+}}
+\end{center}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 13: Đề xuất Bài Thực Hành 1 (Hands-on Lab 1)
+%---------------------------------------------------------
+\begin{frame}{Đề Xuất Thực Hành: Lab 1 -- Multi-Modal AI Pipeline}
+\begin{columns}[T]
+  \begin{column}{0.47\textwidth}
+    \begin{block}{\textbf{Thông tin tổng quan}}
+      \small
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item \textbf{Thời lượng}: 90 phút $\;\vert\;$ \textbf{Cấp độ}: Cơ bản -- Trung cấp.
+        \item \textbf{Môi trường}: Google Colab T4 (Free) hoặc Local GPU.
+        \item \textbf{Chủ đề}: Trợ lý họp thông minh (Voice $\rightarrow$ LLM $\rightarrow$ Vector).
+      \end{itemize}
+    \end{block}
+
+    \vspace{0.3em}
+    \begin{exampleblock}{\textbf{Kỹ năng đạt được sau Lab}}
+      \small
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item Làm chủ thư viện \texttt{transformers.pipeline}.
+        \item Kết nối luồng xử lý: Whisper (ASR) $\rightarrow$ Llama-3 (LLM).
+        \item Tạo và truy vấn semantic vector với \texttt{bge-m3}.
+      \end{itemize}
+    \end{exampleblock}
+  \end{column}
+
+  \begin{column}{0.50\textwidth}
+    \begin{block}{\textbf{Sơ đồ luồng bài thực hành (Lab Flow)}}
+      \begin{center}
+      \begin{tikzpicture}[
+        scale=0.85, transform shape,
+        node distance=0.45cm,
+        box/.style={rectangle, draw=hfprimary, fill=white, rounded corners=4pt, font=\scriptsize\bfseries, align=center, inner sep=3.5pt, text width=4.6cm, line width=1pt},
+        arr/.style={-{Stealth[scale=0.85]}, line width=1pt, draw=hforange}
+      ]
+        \node[box, fill=hfblue!15] (b1) {1. Ghi âm câu hỏi / Input Audio file};
+        \node[box, fill=purple!15, below=of b1] (b2) {2. Whisper Pipeline: Dịch Audio $\rightarrow$ Text};
+        \node[box, fill=hforange!15, below=of b2] (b3) {3. Llama-3.2-1B: Trả lời \& Tóm tắt nội dung};
+        \node[box, fill=hfgreen!15, below=of b3] (b4) {4. BGE-M3: Vectorize lưu vào Vector DB};
+
+        \draw[arr] (b1) -- (b2);
+        \draw[arr] (b2) -- (b3);
+        \draw[arr] (b3) -- (b4);
+      \end{tikzpicture}
+      \end{center}
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 14: Đề xuất Bài Thực Hành 2 (Hands-on Lab 2)
+%---------------------------------------------------------
+\begin{frame}[fragile]{Đề Xuất Thực Hành: Lab 2 -- LoRA Fine-Tuning \& Spaces App}
+\begin{columns}[T]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{Nội dung chính (Thời lượng: 120 phút)}}
+      \small
+      \textbf{Tình huống}: Huấn luyện FAQ Bot chính sách nội bộ.
+      \begin{enumerate}\setlength{\itemsep}{1.5pt}
+        \item \textbf{Data}: 50 cặp QA dạng \texttt{instruction}/\texttt{response}.
+        \item \textbf{PEFT/LoRA}: Cấu hình tham số ($r=8, \alpha=16$).
+        \item \textbf{Training}: 3 epochs với \texttt{SFTTrainer} ($\approx 15$p trên T4).
+        \item \textbf{Push Hub}: Tự động đẩy Adapter lên Hugging Face Hub.
+      \end{enumerate}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{exampleblock}{\textbf{Đóng gói sản phẩm với HF Spaces}}
+      \small
+      \begin{itemize}\setlength{\itemsep}{1pt}
+        \item Tạo Web UI tương tác bằng \textbf{Gradio}:
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{6.5pt}{7.8pt}\selectfont]
+import gradio as gr
+from transformers import pipeline
+
+pipe = pipeline("text-generation", 
+                model="my-org/custom-faq-model")
+def respond(msg, hist):
+    return pipe(msg)[0]['generated_text']
+
+gr.ChatInterface(respond).launch()
+\end{lstlisting}
+        \item Triển khai lên \textbf{Hugging Face Spaces} (Free Tier).
+      \end{itemize}
+    \end{exampleblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 15: Đánh Giá Tổng Thể: Ưu & Nhược Điểm
+%---------------------------------------------------------
+\begin{frame}{Tổng Kết: Ưu Điểm \& Thách Thức Của Hugging Face}
+\begin{columns}[T]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{\textbf{\textcolor{hfgreen}{\ding{52}} Ưu Điểm Nổi Bật}}
+      \begin{itemize}
+        \item \textbf{Tiêu chuẩn de facto của ngành}: Hầu như mọi model mã nguồn mở hàng đầu đều công bố đầu tiên trên HF Hub.
+        \item \textbf{Thư viện thống nhất}: API đồng bộ giữa các tác vụ (chỉ cần đổi tên model là chạy được từ BERT sang Llama hay Whisper).
+        \item \textbf{Cộng đồng khổng lồ}: Hàng nghìn bài hướng dẫn, notebook có sẵn giúp đẩy nhanh tiến độ R\&D gấp 3 lần.
+        \item \textbf{Hạ tầng tích hợp sẵn}: Dễ dàng chuyển dịch từ Colab $\rightarrow$ Hub $\rightarrow$ Spaces $\rightarrow$ Endpoints.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{alertblock}{\textbf{\textcolor{hfred}{\ding{56}} Thách Thức Cần Lưu Ý}}
+      \begin{itemize}
+        \item \textbf{Băng thông \& Dung lượng đĩa}: Model LLM thường từ 5GB - 30GB, dễ gây tràn ổ cứng và nghẽn mạng nếu không dọn cache.
+        \item \textbf{Chi phí Dedicated Endpoints}: Chi phí có thể tăng nhanh nếu quên tắt các instance GPU cao cấp sau khi test xong.
+        \item \textbf{Chất lượng model không đồng đều}: Hub là nền tảng mở, nhiều repo không có benchmark kiểm chứng.
+      \end{itemize}
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------------------------------------------------------
+% SLIDE 16: Kết luận & Kế hoạch Tiếp theo (Next Steps)
+%---------------------------------------------------------
+\begin{frame}{}
+\vspace{1.2em}
+\begin{center}
+  \Large \textbf{\textcolor{hfprimary}{Cảm ơn mọi người đã lắng nghe!}}\\[4pt]
+  \normalsize \textbf{\textcolor{hforange}{Sẵn sàng cho (Q\&A)}}
+\end{center}
+\end{frame}
+
+\end{document}
